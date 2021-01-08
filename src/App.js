@@ -1,23 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
+import Clock from './Components/Clock.js';
 
 function App() {
+  let display = {height: "100vh", backgroundImage: "linear-gradient(to top, #EDAFAA , #5B86E5)"}
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={display}>
+    <Clock />
     </div>
   );
 }

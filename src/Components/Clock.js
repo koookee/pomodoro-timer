@@ -19,7 +19,7 @@ class Clock extends React.Component{
     return(
       <div>
         <img style={clockDisplay} src={ClockLogo} alt="Clock Logo" />
-        <p style={timer} type="button">17:00</p>
+        <p style={timer} type="button">{this.props.time}</p>
         <Icon.ArrowRight style={timer}> </Icon.ArrowRight>
       </div>
     )

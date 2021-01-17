@@ -18,16 +18,15 @@ class App extends React.Component{
   }
   handleClickAddBreak(){
     if(this.state.breakTime < 60) this.setState({breakTime: this.state.breakTime + 1})
-
   }
   handleClickSubBreak(){
-    if(this.state.breakTime > 0) this.setState({breakTime: this.state.breakTime - 1})
+    if(this.state.breakTime > 1) this.setState({breakTime: this.state.breakTime - 1})
   }
   handleClickAddSession(){
     if(this.state.sessionTime < 60)this.setState({sessionTime: this.state.sessionTime + 1})
   }
   handleClickSubSession(){
-    if(this.state.sessionTime > 0)this.setState({sessionTime: this.state.sessionTime - 1})
+    if(this.state.sessionTime > 1)this.setState({sessionTime: this.state.sessionTime - 1})
   }
   render(){
     let generalDisplay = {height: "100vh", backgroundImage: "linear-gradient(to top, #EDAFAA , #5B86E5)"};

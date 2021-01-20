@@ -26,13 +26,13 @@ class App extends React.Component{
     if(this.state.breakTime < 60){
       this.setState({breakTime: this.state.breakTime + 1})
       //Consider using a callback in setState({breaktime}) that assigns breakTime to currentBreakTime instead of adding 60
-      this.setState({currentcurrentBreakTime: this.state.currentBreakTime + 60})
+      this.setState({currentBreakTime: this.state.currentBreakTime + 60})
     }
   }
   handleClickSubBreak(){
     if(this.state.breakTime > 1){
       this.setState({breakTime: this.state.breakTime - 1})
-      this.setState({currentcurrentBreakTime: this.state.currentBreakTime - 60})
+      this.setState({currentBreakTime: this.state.currentBreakTime - 60})
     }
   }
   handleClickAddSession(){
@@ -61,18 +61,20 @@ class App extends React.Component{
     if(this.state.sessionActive){
       this.setState({currentSessionTime: this.state.currentSessionTime - 1}, () => {
         if(this.state.currentSessionTime == 0) {
-          clearTimeout(this.timer);
-          this.sessionActive = !this.sessionActive;
-          this.breakActive = !this.breakActive;
+          //clearTimeout(this.timer);
+          this.setState({sessionActive : false});
+          this.setState({breakActive : true});
+          this.setState({currentBreakTime: this.state.breakTime*60}) //Resets it back to the initial value before transitioning
         }
       })
     }
     else{
       this.setState({currentBreakTime: this.state.currentBreakTime - 1}, () => {
         if(this.state.currentBreakTime == 0) {
-          clearTimeout(this.timer);
-          this.sessionActive = !this.sessionActive;
-          this.breakActive = !this.breakActive;
+          //clearTimeout(this.timer);
+          this.setState({sessionActive : true});
+          this.setState({breakActive : false});
+          this.setState({currentSessionTime: this.state.sessionTime*60})
         }
       })
     }

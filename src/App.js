@@ -5,49 +5,45 @@ class App extends React.Component{
   constructor(){
     super();
     this.state = {
-      time: 0,
-      breakTime: 5,
-      currentBreakTime: 5*60, //Value changes when the timer is played. *60 is to convert it to seconds
+      time: 0, //Can either have the value of currentBreakTime or currentSessionTime
+      breakTime: 5, //Duration of breakTime in minutes
+      currentBreakTime: 5*60, //Value changes (decreases) when the timer starts or gets unpaused. *60 is to convert it to seconds
       sessionTime: 25,
       currentSessionTime: 25*60,
       sessionActive: true,
       breakActive: false,
       timerRunning: false
     }
-    this.handleClickAddBreak = this.handleClickAddBreak.bind(this);
-    this.handleClickSubBreak = this.handleClickSubBreak.bind(this);
-    this.handleClickAddSession = this.handleClickAddSession.bind(this);
-    this.handleClickSubSession = this.handleClickSubSession.bind(this);
+    this.handleClickAddMinute = this.handleClickAddMinute.bind(this);
+    this.handleClickSubMinute = this.handleClickSubMinute.bind(this);
     this.handleClickPlay = this.handleClickPlay.bind(this);
+    this.handleClickReset = this.handleClickReset.bind(this);
     this.decreaseTimer = this.decreaseTimer.bind(this);
   }
-  timer;
-  handleClickAddBreak(){
-    if(this.state.breakTime < 60){
-      this.setState({breakTime: this.state.breakTime + 1})
-      //Consider using a callback in setState({breaktime}) that assigns breakTime to currentBreakTime instead of adding 60
-      this.setState({currentBreakTime: this.state.currentBreakTime + 60})
+
+  timer; // Variable that gets assigned setInterval
+
+  handleClickAddMinute(phase){
+    if(this.state.breakTime < 60 && !this.state.timerRunning && phase == "Break"){
+      this.setState({breakTime: this.state.breakTime + 1},
+        () => this.setState({currentBreakTime: this.state.breakTime * 60}))
+    }
+    if(this.state.sessionTime < 60 && !this.state.timerRunning && phase == "Session"){
+      this.setState({sessionTime: this.state.sessionTime + 1},
+        () => this.setState({currentSessionTime: this.state.sessionTime * 60}))
     }
   }
-  handleClickSubBreak(){
-    if(this.state.breakTime > 1){
-      this.setState({breakTime: this.state.breakTime - 1})
-      this.setState({currentBreakTime: this.state.currentBreakTime - 60})
+  handleClickSubMinute(phase){
+    if(this.state.breakTime > 1 && !this.state.timerRunning && phase == "Break"){
+      this.setState({breakTime: this.state.breakTime - 1},
+        () => this.setState({currentBreakTime: this.state.breakTime * 60}))
+    }
+    if(this.state.sessionTime > 1 && !this.state.timerRunning && phase == "Session"){
+      this.setState({sessionTime: this.state.sessionTime - 1},
+        () => this.setState({currentSessionTime: this.state.sessionTime * 60}))
     }
   }
-  handleClickAddSession(){
-    if(this.state.sessionTime < 60){
-      this.setState({sessionTime: this.state.sessionTime + 1})
-      this.setState({currentSessionTime: this.state.currentSessionTime + 60})
-    }
-  }
-  handleClickSubSession(){
-    if(this.state.sessionTime > 1){
-      this.setState({sessionTime: this.state.sessionTime - 1})
-      this.setState({currentSessionTime: this.state.currentSessionTime - 60})
-    }
-  }
-  handleClickPlay(){
+  handleClickPlay(){ // Starts or pauses the timer
     if(!this.state.timerRunning){
       this.timer = setInterval(this.decreaseTimer,1000);
       this.setState({timerRunning:true})
@@ -57,11 +53,22 @@ class App extends React.Component{
       this.setState({timerRunning:false})
     }
   }
+  handleClickReset(){  //Resets the clock back to the initial state
+    this.setState({
+      breakTime: 5,
+      currentBreakTime: 5*60,
+      sessionTime: 25,
+      currentSessionTime: 25*60,
+      sessionActive: true,
+      breakActive: false,
+      timerRunning: false
+    })
+    clearTimeout(this.timer);
+  }
   decreaseTimer(){ //Subtracts 1 from the timer every second
     if(this.state.sessionActive){
       this.setState({currentSessionTime: this.state.currentSessionTime - 1}, () => {
         if(this.state.currentSessionTime == 0) {
-          //clearTimeout(this.timer);
           this.setState({sessionActive : false});
           this.setState({breakActive : true});
           this.setState({currentBreakTime: this.state.breakTime*60}) //Resets it back to the initial value before transitioning
@@ -71,7 +78,6 @@ class App extends React.Component{
     else{
       this.setState({currentBreakTime: this.state.currentBreakTime - 1}, () => {
         if(this.state.currentBreakTime == 0) {
-          //clearTimeout(this.timer);
           this.setState({sessionActive : true});
           this.setState({breakActive : false});
           this.setState({currentSessionTime: this.state.sessionTime*60})
@@ -107,26 +113,25 @@ class App extends React.Component{
         this.setState({breakActive: !this.state.breakActive})
       }
       clearTimeout(this.timer);
-
     }
-
     return(
       <div style={generalDisplay}>
         <div>
           <Clock time={this.state.sessionActive? this.state.currentSessionTime:this.state.currentBreakTime}
           phase={this.state.sessionActive? "Session" : "Break"}/>
           <button onClick={this.handleClickPlay} style={breakDisplay("70%")}>|></button>
+          <button onClick={this.handleClickReset} style={breakDisplay("80%")}>|</button>
         </div>
         <div>
           <p style={breakDisplay("45%")}>Break</p>
-          <button onClick={this.handleClickAddBreak} style={breakAddDisplay}>+</button>
-          <button onClick={this.handleClickSubBreak} style={breakSubDisplay}>-</button>
+          <button onClick={this.handleClickAddMinute.bind(this,"Break")} style={breakAddDisplay}>+</button>
+          <button onClick={this.handleClickSubMinute.bind(this,"Break")} style={breakSubDisplay}>-</button>
           <p style={breakDisplay("55%")}>{this.state.breakTime}</p>
         </div>
         <div>
           <p style={sessionDisplay("45%")}>Session</p>
-          <button onClick={this.handleClickAddSession} style={sessionSubDisplay}>+</button>
-          <button onClick={this.handleClickSubSession} style={sessionAddDisplay}>-</button>
+          <button onClick={this.handleClickAddMinute.bind(this,"Session")} style={sessionSubDisplay}>+</button>
+          <button onClick={this.handleClickSubMinute.bind(this,"Session")} style={sessionAddDisplay}>-</button>
           <p style={sessionDisplay("55%")}>{this.state.sessionTime}</p>
         </div>
       </div>

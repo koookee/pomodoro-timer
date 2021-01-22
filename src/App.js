@@ -5,7 +5,6 @@ class App extends React.Component{
   constructor(){
     super();
     this.state = {
-      time: 0, //Can either have the value of currentBreakTime or currentSessionTime
       breakTime: 5, //Duration of breakTime in minutes
       currentBreakTime: 5*60, //Value changes (decreases) when the timer starts or gets unpaused. *60 is to convert it to seconds
       sessionTime: 25,
@@ -44,11 +43,11 @@ class App extends React.Component{
     }
   }
   handleClickPlay(){ // Starts or pauses the timer
-    if(!this.state.timerRunning){
+    if(this.state.timerRunning == false){
       this.timer = setInterval(this.decreaseTimer,1000);
       this.setState({timerRunning:true})
     }
-    if(this.state.timerRunning){
+    if(this.state.timerRunning == true){
       clearTimeout(this.timer);
       this.setState({timerRunning:false})
     }
@@ -64,23 +63,27 @@ class App extends React.Component{
       timerRunning: false
     })
     clearTimeout(this.timer);
+    document.getElementById("beep").pause();
+    document.getElementById("beep").currentTime = 0;
   }
   decreaseTimer(){ //Subtracts 1 from the timer every second
     if(this.state.sessionActive){
       this.setState({currentSessionTime: this.state.currentSessionTime - 1}, () => {
-        if(this.state.currentSessionTime == 0) {
+        if(this.state.currentSessionTime < 0) { //Checks if the timer is done (reached 00:00)
           this.setState({sessionActive : false});
           this.setState({breakActive : true});
           this.setState({currentBreakTime: this.state.breakTime*60}) //Resets it back to the initial value before transitioning
+          document.getElementById("beep").play();
         }
       })
     }
     else{
       this.setState({currentBreakTime: this.state.currentBreakTime - 1}, () => {
-        if(this.state.currentBreakTime == 0) {
+        if(this.state.currentBreakTime < 0) { //Checks if the timer is done (reached 00:00)
           this.setState({sessionActive : true});
           this.setState({breakActive : false});
           this.setState({currentSessionTime: this.state.sessionTime*60})
+          document.getElementById("beep").play();
         }
       })
     }
@@ -102,37 +105,31 @@ class App extends React.Component{
     function sessionDisplay(topValue){
       return {position:"fixed",top:topValue, right:"14.5%", fontSize:"2vw"}
     }
-    let sessionAddDisplay = {position:"fixed",top:"50%", right:"22%",
+    let sessionSubDisplay = {position:"fixed",top:"50%", right:"22%",
     minWidth:"4vw", minHeight:"6vh"};
-    let sessionSubDisplay = {position:"fixed",top:"50%", right:"10%",
+    let sessionAddDisplay = {position:"fixed",top:"50%", right:"10%",
     minWidth:"4vw", minHeight:"6vh"};
 
-    function checkIfDone(){ //Checks if the timer is done (reached 00:00)
-      if(this.state.currentBreakTime == 0 || this.state.currentSessionTime == 0){
-        this.setState({sessionActive: !this.state.sessionActive})
-        this.setState({breakActive: !this.state.breakActive})
-      }
-      clearTimeout(this.timer);
-    }
     return(
       <div style={generalDisplay}>
         <div>
           <Clock time={this.state.sessionActive? this.state.currentSessionTime:this.state.currentBreakTime}
           phase={this.state.sessionActive? "Session" : "Break"}/>
-          <button onClick={this.handleClickPlay} style={breakDisplay("70%")}>|></button>
-          <button onClick={this.handleClickReset} style={breakDisplay("80%")}>|</button>
+          <audio id="beep" src="https://sampleswap.org/samples-ghost/INSTRUMENTS (SINGLE SAMPLES)/Bells/1128[kb]one-pretty-bell.wav.mp3" type="audio/mpeg" />
+          <button onClick={this.handleClickPlay} style={breakDisplay("70%")} id="start_stop">|></button>
+          <button onClick={this.handleClickReset} style={breakDisplay("80%")} id="reset">|</button>
         </div>
         <div>
-          <p style={breakDisplay("45%")}>Break</p>
-          <button onClick={this.handleClickAddMinute.bind(this,"Break")} style={breakAddDisplay}>+</button>
-          <button onClick={this.handleClickSubMinute.bind(this,"Break")} style={breakSubDisplay}>-</button>
-          <p style={breakDisplay("55%")}>{this.state.breakTime}</p>
+          <p style={breakDisplay("45%")} id="break-label">Break</p>
+          <button onClick={this.handleClickAddMinute.bind(this,"Break")} id="break-increment" style={breakAddDisplay}>+</button>
+          <button onClick={this.handleClickSubMinute.bind(this,"Break")} id="break-decrement" style={breakSubDisplay}>-</button>
+          <p style={breakDisplay("55%")} id="break-length">{this.state.breakTime}</p>
         </div>
         <div>
-          <p style={sessionDisplay("45%")}>Session</p>
-          <button onClick={this.handleClickAddMinute.bind(this,"Session")} style={sessionSubDisplay}>+</button>
-          <button onClick={this.handleClickSubMinute.bind(this,"Session")} style={sessionAddDisplay}>-</button>
-          <p style={sessionDisplay("55%")}>{this.state.sessionTime}</p>
+          <p style={sessionDisplay("45%")} id="session-label">Session</p>
+          <button onClick={this.handleClickAddMinute.bind(this,"Session")} id="session-increment" style={sessionAddDisplay}>+</button>
+          <button onClick={this.handleClickSubMinute.bind(this,"Session")} id="session-decrement"style={sessionSubDisplay}>-</button>
+          <p style={sessionDisplay("55%")} id="session-length">{this.state.sessionTime}</p>
         </div>
       </div>
     )

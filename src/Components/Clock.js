@@ -27,8 +27,8 @@ class Clock extends React.Component{
     return(
       <div>
         <img style={clockDisplay} src={ClockLogo} alt="Clock Logo" />
-        <p style={timer}>{minutes}:{seconds}</p>
-        <div style={timer}>{this.props.phase}</div>
+        <p style={timer} id="time-left">{minutes}:{seconds}</p>
+        <div style={timer} id="timer-label">{this.props.phase}</div>
       </div>
     )
   }

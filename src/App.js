@@ -110,14 +110,19 @@ class App extends React.Component{
     let sessionAddDisplay = {position:"fixed",top:"50%", right:"10%",
     minWidth:"4vw", minHeight:"6vh"};
 
+    //Controls display (pause/play + reset)
+    function controlsDisplay(rightValue){
+      return {position:"fixed",top:"65%", right:rightValue, fontSize:"2vw"}
+    }
+
     return(
       <div style={generalDisplay}>
         <div>
           <Clock time={this.state.sessionActive? this.state.currentSessionTime:this.state.currentBreakTime}
           phase={this.state.sessionActive? "Session" : "Break"}/>
           <audio id="beep" src="https://sampleswap.org/samples-ghost/INSTRUMENTS (SINGLE SAMPLES)/Bells/1128[kb]one-pretty-bell.wav.mp3" type="audio/mpeg" />
-          <button onClick={this.handleClickPlay} style={breakDisplay("70%")} id="start_stop">|></button>
-          <button onClick={this.handleClickReset} style={breakDisplay("80%")} id="reset">|</button>
+          <button onClick={this.handleClickPlay} style={controlsDisplay("51%")} id="start_stop">|></button>
+          <button onClick={this.handleClickReset} style={controlsDisplay("46%")} id="reset">|</button>
         </div>
         <div>
           <p style={breakDisplay("45%")} id="break-label">Break</p>

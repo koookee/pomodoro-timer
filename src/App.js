@@ -1,5 +1,6 @@
 import React from 'react';
 import Clock from './Components/Clock.js';
+import './CSS/App.css';
 
 class App extends React.Component{
   constructor(){
@@ -93,8 +94,8 @@ class App extends React.Component{
     let generalDisplay = {height: "100vh", backgroundImage: "linear-gradient(to top, #EDAFAA , #5B86E5)"};
 
     //Break display
-    function breakDisplay(topValue){
-      return {position:"fixed",top:topValue, left:"14.5%", fontSize:"2vw"}
+    function breakDisplay(topValue, leftValue){
+      return {position:"fixed",top:topValue, left:leftValue, fontSize:"2vw"}
     }
     let breakAddDisplay = {position:"fixed",top:"50%", left:"20%",
     minWidth:"4vw", minHeight:"6vh"}; //mindWidth & minHeight ensure the buttons are the same size
@@ -102,8 +103,8 @@ class App extends React.Component{
     minWidth:"4vw", minHeight:"6vh"};
 
     //Session display
-    function sessionDisplay(topValue){
-      return {position:"fixed",top:topValue, right:"14.5%", fontSize:"2vw"}
+    function sessionDisplay(topValue, rightValue){
+      return {position:"fixed",top:topValue, right:rightValue, fontSize:"2vw"}
     }
     let sessionSubDisplay = {position:"fixed",top:"50%", right:"22%",
     minWidth:"4vw", minHeight:"6vh"};
@@ -118,23 +119,24 @@ class App extends React.Component{
     return(
       <div style={generalDisplay}>
         <div>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
           <Clock time={this.state.sessionActive? this.state.currentSessionTime:this.state.currentBreakTime}
           phase={this.state.sessionActive? "Session" : "Break"}/>
           <audio id="beep" src="https://sampleswap.org/samples-ghost/INSTRUMENTS (SINGLE SAMPLES)/Bells/1128[kb]one-pretty-bell.wav.mp3" type="audio/mpeg" />
-          <button onClick={this.handleClickPlay} style={controlsDisplay("51%")} id="start_stop">|></button>
-          <button onClick={this.handleClickReset} style={controlsDisplay("46%")} id="reset">|</button>
+          <button onClick={this.handleClickPlay} style={controlsDisplay("51%")} id="start_stop"><i class="fa fa-play"></i></button>
+          <button onClick={this.handleClickReset} style={controlsDisplay("46%")} id="reset"><i class="fa fa-refresh"></i></button>
         </div>
         <div>
-          <p style={breakDisplay("45%")} id="break-label">Break</p>
-          <button onClick={this.handleClickAddMinute.bind(this,"Break")} id="break-increment" style={breakAddDisplay}>+</button>
-          <button onClick={this.handleClickSubMinute.bind(this,"Break")} id="break-decrement" style={breakSubDisplay}>-</button>
-          <p style={breakDisplay("55%")} id="break-length">{this.state.breakTime}</p>
+          <p style={breakDisplay("41%", "14.5%")} id="break-label">Break</p>
+          <button onClick={this.handleClickAddMinute.bind(this,"Break")} id="break-increment" style={breakAddDisplay}><i class="fa fa-plus"></i></button>
+          <button onClick={this.handleClickSubMinute.bind(this,"Break")} id="break-decrement" style={breakSubDisplay}><i class="fa fa-minus"></i></button>
+          <p style={breakDisplay("54%", "16.5%")} id="break-length">{this.state.breakTime}</p>
         </div>
         <div>
-          <p style={sessionDisplay("45%")} id="session-label">Session</p>
-          <button onClick={this.handleClickAddMinute.bind(this,"Session")} id="session-increment" style={sessionAddDisplay}>+</button>
-          <button onClick={this.handleClickSubMinute.bind(this,"Session")} id="session-decrement"style={sessionSubDisplay}>-</button>
-          <p style={sessionDisplay("55%")} id="session-length">{this.state.sessionTime}</p>
+          <p style={sessionDisplay("41%", "15%")} id="session-label">Session</p>
+          <button onClick={this.handleClickAddMinute.bind(this,"Session")} id="session-increment" style={sessionAddDisplay}><i class="fa fa-plus"></i></button>
+          <button onClick={this.handleClickSubMinute.bind(this,"Session")} id="session-decrement"style={sessionSubDisplay}><i class="fa fa-minus"></i></button>
+          <p style={sessionDisplay("54%", "17%")} id="session-length">{this.state.sessionTime}</p>
         </div>
       </div>
     )

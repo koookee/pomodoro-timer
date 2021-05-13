@@ -97,18 +97,18 @@ class App extends React.Component{
     function breakDisplay(topValue, leftValue){
       return {position:"fixed",top:topValue, left:leftValue, fontSize:"2vw"}
     }
-    let breakAddDisplay = {position:"fixed",top:"50%", left:"20%",
+    let breakAddDisplay = {position:"fixed",top:"50%", left:"21%",
     minWidth:"4vw", minHeight:"6vh"}; //mindWidth & minHeight ensure the buttons are the same size
-    let breakSubDisplay = {position:"fixed",top:"50%", left:"10%",
+    let breakSubDisplay = {position:"fixed",top:"50%", left:"11%",
     minWidth:"4vw", minHeight:"6vh"};
 
     //Session display
     function sessionDisplay(topValue, rightValue){
       return {position:"fixed",top:topValue, right:rightValue, fontSize:"2vw"}
     }
-    let sessionSubDisplay = {position:"fixed",top:"50%", right:"22%",
+    let sessionSubDisplay = {position:"fixed",top:"50%", right:"21%",
     minWidth:"4vw", minHeight:"6vh"};
-    let sessionAddDisplay = {position:"fixed",top:"50%", right:"10%",
+    let sessionAddDisplay = {position:"fixed",top:"50%", right:"11%",
     minWidth:"4vw", minHeight:"6vh"};
 
     //Controls display (pause/play + reset)
@@ -127,16 +127,16 @@ class App extends React.Component{
           <button onClick={this.handleClickReset} style={controlsDisplay("46%")} id="reset"><i class="fa fa-refresh"></i></button>
         </div>
         <div>
-          <p style={breakDisplay("41%", "14.5%")} id="break-label">Break</p>
+          <p style={breakDisplay("36%", "15.5%")} id="break-label">Break</p>
           <button onClick={this.handleClickAddMinute.bind(this,"Break")} id="break-increment" style={breakAddDisplay}><i class="fa fa-plus"></i></button>
           <button onClick={this.handleClickSubMinute.bind(this,"Break")} id="break-decrement" style={breakSubDisplay}><i class="fa fa-minus"></i></button>
-          <p style={breakDisplay("54%", "16.5%")} id="break-length">{this.state.breakTime}</p>
+          <p style={breakDisplay("48%", "17.5%")} id="break-length">{this.state.breakTime}</p>
         </div>
         <div>
-          <p style={sessionDisplay("41%", "15%")} id="session-label">Session</p>
+          <p style={sessionDisplay("36%", "15.25%")} id="session-label">Session</p>
           <button onClick={this.handleClickAddMinute.bind(this,"Session")} id="session-increment" style={sessionAddDisplay}><i class="fa fa-plus"></i></button>
           <button onClick={this.handleClickSubMinute.bind(this,"Session")} id="session-decrement"style={sessionSubDisplay}><i class="fa fa-minus"></i></button>
-          <p style={sessionDisplay("54%", "17%")} id="session-length">{this.state.sessionTime}</p>
+          <p style={sessionDisplay("48%", "17.5%")} id="session-length">{this.state.sessionTime}</p>
         </div>
       </div>
     )
